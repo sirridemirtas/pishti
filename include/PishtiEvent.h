@@ -2,14 +2,14 @@
 
 // When the following events occur, subscribed observers will be notified
 enum class PishtiEvent: uint8_t {
-    GAME_START, // When the game starts, payload: nullptr
-    ROUND_START, // When a round starts, payload: round number
-    ROUND_END, // When a round ends, payload: the player who won the round
-    THROWN_CARD, // When a player throws a card, payload: the thrown card
-    CARDS_COLLECTED, // When a player collects cards from the table, payload: the player
-    PISHTI, // When a player makes a pishti, payload: the player
-    TURN, // When it is a player's turn, payload: the player
-    GAME_OVER, // When the game ends, payload: the player who won the game
+    GAME_START,      // When the game starts,         payload: nullptr
+    ROUND_START,     // When a round starts,          payload: round number
+    ROUND_END,       // When a round ends,            payload: the player who won the round
+    THROWN_CARD,     // When a player throws a card,  payload: the thrown card
+    CARDS_COLLECTED, // When a player collects cards, payload: the player
+    PISHTI,          // When a player makes a pishti, payload: the player
+    TURN,            // When it is a player's turn,   payload: the player
+    GAME_OVER,       // When the game ends,           payload: the player who won the game
 };
 
 inline std::string eventToString(PishtiEvent event) {
