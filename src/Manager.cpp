@@ -61,6 +61,11 @@ void Manager::initGame() {
     std::cout << "Deck size: " << static_cast<int>(game->deck.size()) << std::endl;
 
     notifyPlayers(PishtiEvent::GAME_START, nullptr);
+
+    //while (!game->gameOver) {
+        playRound();
+        //updateScores();
+    //}
 }
 
 void Manager::notifyPlayers(PishtiEvent event, void *payload) {
@@ -88,13 +93,13 @@ void Manager::dealCards() {
 
 void Manager::playRound() {
     game->round++;
-    std::cout << "Round " << game->round << std::endl;
+    std::cout << "Round " << game->round << " start" <<std::endl;
 
     // notify players of the round start
     notifyPlayers(PishtiEvent::ROUND_START, nullptr);
 
     // play the round
-    while (game->getDeckSize()) {
+    while (!game->gameOver) {
         for (Player *player: game->players) {
             if (player->hand.size() == 0 && game->deck.size() > 0) {
                 dealCards();
@@ -112,6 +117,7 @@ void Manager::playRound() {
             Card *playedCard = player->playCard();
 
             game->playedCards.push_back(playedCard);
+            std::cout<<"playedCards: " << static_cast<int>(game->playedCards.size()) << std::endl;
 
             if (playedCard->getRank() == topCard->getRank()) {
                 player->collectPile(game->pile);
@@ -121,6 +127,7 @@ void Manager::playRound() {
         }
     }
 
+    std::cout << "Round " << game->round << " end" <<std::endl;
     // notify players of the round end
     notifyPlayers(PishtiEvent::ROUND_END, nullptr);
 }

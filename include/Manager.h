@@ -22,6 +22,8 @@ class Manager {
 
     void updateScores();
 
+    void playRound();
+
 public:
     Manager();
 
@@ -34,8 +36,6 @@ public:
     void setGame(Pishti *game);
 
     void initGame();
-
-    void playRound();
 
     void endGame();
 

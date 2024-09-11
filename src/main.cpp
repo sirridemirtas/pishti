@@ -23,9 +23,9 @@ int main() {
 
     manager.initGame();
 
-    while (!game.isGameOver()) {
-        manager.playRound();
-    }
+    //while (!game.isGameOver()) {
+        //manager.playRound();
+    //}
 
 
     //std::cout << "Deck size: " << game.getDeckSize() << std::endl;
