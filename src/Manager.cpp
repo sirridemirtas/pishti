@@ -1,8 +1,10 @@
 #include <iostream>
 
 #include "../include/Manager.h"
+#include "../include/ConsoleDisplay.h"
 
-Manager::Manager() : game(nullptr) {
+Manager::Manager() : game(nullptr), displayStrategy(nullptr) {
+    std::cout << "Manager created." << std::endl;
 }
 
 void Manager::addPlayer(Player *player) {
@@ -19,9 +21,9 @@ size_t Manager::getNumPlayers() const {
     return game->players.size();
 }
 
-void Manager::subscribeToEvent(PishtiEvent event, Player *player) {
+void Manager::subscribeToEvent(PishtiEvent event, PishtiObserver *player) {
     eventSubscribers[event].push_back(player);
-    std::cout << player->getName() << " subscribed to " << eventToString(event) << std::endl;
+    //std::cout << player->getName() << " subscribed to " << eventToString(event) << std::endl;
 }
 
 void Manager::setGame(Pishti *gameInstance) {
@@ -46,6 +48,13 @@ void Manager::initGame() {
         subscribeToEvent(PishtiEvent::CARDS_COLLECTED, player);
     }
 
+    // set display strategy
+    displayStrategy = new ConsoleDisplay();
+
+    // displayStrategy subscribes to events
+    subscribeToEvent(PishtiEvent::ROUND_START, displayStrategy);
+
+
     game->deck.shuffle();
     std::cout << "Deck shuffled." << std::endl;
 
@@ -60,7 +69,7 @@ void Manager::initGame() {
     }
     std::cout << "Deck size: " << static_cast<int>(game->deck.size()) << std::endl;
 
-    notifyPlayers(PishtiEvent::GAME_START, nullptr);
+    notifyObservers(PishtiEvent::GAME_START, nullptr);
 
     //while (!game->gameOver) {
         playRound();
@@ -68,9 +77,9 @@ void Manager::initGame() {
     //}
 }
 
-void Manager::notifyPlayers(PishtiEvent event, void *payload) {
-    for (Player *player: eventSubscribers[event]) {
-        player->update(event, payload);
+void Manager::notifyObservers(PishtiEvent event, void *payload) {
+    for (PishtiObserver *observer: eventSubscribers[event]) {
+        observer->update(event, payload);
     }
     //std::cout << "All players notified for " << eventToString(event) << std::endl;
 }
@@ -96,7 +105,7 @@ void Manager::playRound() {
     std::cout << "Round " << game->round << " start" <<std::endl;
 
     // notify players of the round start
-    notifyPlayers(PishtiEvent::ROUND_START, nullptr);
+    notifyObservers(PishtiEvent::ROUND_START, nullptr);
 
     // play the round
     while (!game->gameOver) {
@@ -106,7 +115,7 @@ void Manager::playRound() {
             } else if (player->hand.size() == 0 && game->deck.size() == 0) {
                 std::cout << "Deck is empty." << std::endl;
                 game->gameOver = true;
-                notifyPlayers(PishtiEvent::GAME_OVER, nullptr);
+                notifyObservers(PishtiEvent::GAME_OVER, nullptr);
                 break;
             }
 
@@ -129,7 +138,7 @@ void Manager::playRound() {
 
     std::cout << "Round " << game->round << " end" <<std::endl;
     // notify players of the round end
-    notifyPlayers(PishtiEvent::ROUND_END, nullptr);
+    notifyObservers(PishtiEvent::ROUND_END, nullptr);
 }
 
 void Manager::updateScores() {

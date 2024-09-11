@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 
+#include "DisplayStrategy.h"
 #include "Pishti.h"
 #include "Player.h"
 
@@ -10,11 +11,13 @@
 class Manager {
     Pishti *game;
 
-    std::map<PishtiEvent, std::vector<Player *> > eventSubscribers;
+    std::map<PishtiEvent, std::vector<PishtiObserver *> > eventSubscribers;
 
-    void subscribeToEvent(PishtiEvent event, Player *player);
+    DisplayStrategy *displayStrategy;
 
-    void notifyPlayers(PishtiEvent event, void *payload);
+    void subscribeToEvent(PishtiEvent event, PishtiObserver *player);
+
+    void notifyObservers(PishtiEvent event, void *payload);
 
     void setupTableCards();
 

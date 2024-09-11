@@ -24,4 +24,7 @@ add_executable(pishti src/main.cpp
         include/Manager.h
         include/PishtiObserver.h
         src/Player.cpp
+        include/DisplayStrategy.h
+        include/ConsoleDisplay.h
+        src/ConsoleDisplay.cpp
 )
